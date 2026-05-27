@@ -35,9 +35,9 @@ worker.webhook("onSpeakerDeckCreated", {
     console.log(`Deck task created: page ${pageId} — triggering Claude routine`);
 
     // Trigger the Claude speaker deck routine immediately
-    const anthropicKey = process.env.ANTHROPIC_API_KEY;
-    if (!anthropicKey) {
-      console.error("ANTHROPIC_API_KEY secret not set");
+    const oauthToken = process.env.CLAUDE_CODE_OAUTH_TOKEN;
+    if (!oauthToken) {
+      console.error("CLAUDE_CODE_OAUTH_TOKEN env var not set");
       return;
     }
 
@@ -47,7 +47,7 @@ worker.webhook("onSpeakerDeckCreated", {
     const res = await fetch(triggerUrl, {
       method: "POST",
       headers: {
-        "x-api-key": anthropicKey,
+        "Authorization": `Bearer ${oauthToken}`,
         "anthropic-version": "2023-06-01",
         "Content-Type": "application/json",
       },
