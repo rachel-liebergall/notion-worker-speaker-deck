@@ -19,7 +19,7 @@ worker.webhook("onSpeakerDeckCreated", {
   description:
     "Fires the Claude speaker deck routine immediately when a deck/speaker/presentation task is added to the Notion Tasks database.",
 
-  execute: async (event) => {
+  execute: async (event: any) => {
     const body = event.body as Record<string, any>;
 
     // Log the full payload so we can inspect it on first run
@@ -35,20 +35,21 @@ worker.webhook("onSpeakerDeckCreated", {
     console.log(`Deck task created: page ${pageId} — triggering Claude routine`);
 
     // Trigger the Claude speaker deck routine immediately
-    const oauthToken = process.env.CLAUDE_CODE_OAUTH_TOKEN;
-    if (!oauthToken) {
-      console.error("CLAUDE_CODE_OAUTH_TOKEN env var not set");
+    const routineToken = process.env.CLAUDE_ROUTINE_TOKEN;
+    if (!routineToken) {
+      console.error("CLAUDE_ROUTINE_TOKEN env var not set");
       return;
     }
 
     const routineId = "trig_01YPMLFnticN545GzH7ssfFh";
-    const triggerUrl = `https://api.anthropic.com/v1/code/triggers/${routineId}/run`;
+    const triggerUrl = `https://api.anthropic.com/v1/claude_code/routines/${routineId}/fire`;
 
     const res = await fetch(triggerUrl, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${oauthToken}`,
+        "Authorization": `Bearer ${routineToken}`,
         "anthropic-version": "2023-06-01",
+        "anthropic-beta": "experimental-cc-routine-2026-04-01",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({}),

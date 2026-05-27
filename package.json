@@ -1,12 +1,16 @@
 {
   "name": "speaker-deck-worker",
   "version": "1.0.0",
-  "description": "Notion Worker: pre-populates Granola context for speaker deck tasks and fires the Claude deck-creation routine",
+  "description": "Notion Worker: fires the Claude deck-creation routine immediately when a deck task is created",
   "main": "worker.ts",
   "scripts": {
-    "deploy": "ntn workers deploy worker.ts"
+    "build": "tsc"
   },
   "dependencies": {
     "@notionhq/workers": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "typescript": "^5.9.3"
   }
 }
